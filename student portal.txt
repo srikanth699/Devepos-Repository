@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Attendance</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f9fc;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      padding: 30px;
+      max-width: 900px;
+      margin: auto;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .date-selector {
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    .attendance-buttons button {
+      margin-right: 10px;
+      padding: 5px 10px;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .present {
+      background-color: #27ae60;
+      color: white;
+    }
+
+    .absent {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    .submit-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      float: right;
+    }
+
+    .submit-btn:hover {
+      background-color: #1c5980;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Student Attendance</h1>
+  </header>
+
+  <div class="container">
+    <div class="date-selector">
+      <label for="attendance-date">Select Date:</label>
+      <input type="date" id="attendance-date" />
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Student Name</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="student-table">
+        <!-- Student rows will be inserted here -->
+      </tbody>
+    </table>
+
+    <button class="submit-btn" onclick="submitAttendance()">Submit Attendance</button>
+  </div>
+
+  <script>
+    const students = ["Alice Johnson", "Bob Smith", "Charlie Lee", "Diana King"];
+    
+    const studentTable = document.getElementById("student-table");
+
+    students.forEach((name, index) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${name}</td>
+        <td class="attendance-buttons">
+          <button class="present" onclick="markAttendance(${index}, 'Present')">Present</button>
+          <button class="absent" onclick="markAttendance(${index}, 'Absent')">Absent</button>
+        </td>
+      `;
+      studentTable.appendChild(row);
+    });
+
+    const attendanceData = {};
+
+    function markAttendance(index, status) {
+      const buttonsCell = studentTable.rows[index].cells[1];
+      const buttons = buttonsCell.querySelectorAll("button");
+
+      buttons.forEach(btn => btn.style.opacity = "0.4");
+      buttons.forEach(btn => btn.disabled = false);
+
+      const selectedButton = Array.from(buttons).find(btn => btn.textContent === status);
+      selectedButton.style.opacity = "1";
+      selectedButton.disabled = true;
+
+      attendanceData[students[index]] = status;
+    }
+
+    function submitAttendance() {
+      const date = document.getElementById("attendance-date").value;
+      if (!date) {
+        alert("Please select a date before submitting attendance.");
+        return;
+      }
+
+      console.log("Date:", date);
+      console.log("Attendance Data:", attendanceData);
+
+      alert("Attendance submitted successfully!");
+      // You can replace this with an API POST request
+    }
+  </script>
+</body>
+</html>
